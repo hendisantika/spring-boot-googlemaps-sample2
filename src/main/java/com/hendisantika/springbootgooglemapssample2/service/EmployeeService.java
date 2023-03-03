@@ -41,4 +41,12 @@ public class EmployeeService {
         employees.forEach(this::computeAddress);
         return employees;
     }
+
+    private void computeAddress(Employee employee) {
+        if (employee.getAddress() != null && employee.getGeoLocation() == null && !employee.isGeoProcessed()) {
+            geoLocationService.computeGeoLocation(employee.getAddress().toString())
+                    .ifPresent(employee::setGeoLocation);
+            employee.setGeoProcessed(true);
+        }
+    }
 }
