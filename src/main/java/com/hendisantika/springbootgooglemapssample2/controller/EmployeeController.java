@@ -7,14 +7,17 @@ import com.hendisantika.springbootgooglemapssample2.entity.Role;
 import com.hendisantika.springbootgooglemapssample2.service.EmployeeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by IntelliJ IDEA.
@@ -51,5 +54,13 @@ public class EmployeeController {
     public ModelAndView createEmployee(@ModelAttribute CreateEmployeeForm employeeForm) {
         employeeService.create(employeeForm);
         return new ModelAndView("redirect:/");
+    }
+
+    @GetMapping("/api/employees")
+    @ResponseBody
+    public ResponseEntity<List<Employee>> getAllUsers() {
+        final List<Employee> employees =
+                employeeService.getAll().stream().filter(e -> e.getGeoLocation() != null).collect(Collectors.toList());
+        return ResponseEntity.ok(employees);
     }
 }
