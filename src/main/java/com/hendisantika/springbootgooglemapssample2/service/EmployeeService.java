@@ -1,5 +1,6 @@
 package com.hendisantika.springbootgooglemapssample2.service;
 
+import com.hendisantika.springbootgooglemapssample2.entity.Employee;
 import com.hendisantika.springbootgooglemapssample2.repository.EmployeeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,4 +20,13 @@ import org.springframework.stereotype.Service;
 public class EmployeeService {
     private final EmployeeRepository employeeRepository;
     private final GeoLocationService geoLocationService;
+
+    @Transactional
+    public void create(CreateEmployeeForm form) {
+        final Employee employee = new Employee(form.getFirstName(), form.getLastName(), form.getUsername(),
+                form.getEmail(),
+                new Address(form.getStreet(), form.getCity(), form.getCountry()),
+                form.getRole(), form.getJobPosition());
+        employeeRepository.save(employee);
+    }
 }
