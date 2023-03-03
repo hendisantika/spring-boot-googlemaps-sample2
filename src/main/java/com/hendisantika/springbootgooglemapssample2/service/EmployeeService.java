@@ -1,9 +1,14 @@
 package com.hendisantika.springbootgooglemapssample2.service;
 
+import com.hendisantika.springbootgooglemapssample2.dto.CreateEmployeeForm;
+import com.hendisantika.springbootgooglemapssample2.entity.Address;
 import com.hendisantika.springbootgooglemapssample2.entity.Employee;
 import com.hendisantika.springbootgooglemapssample2.repository.EmployeeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -28,5 +33,12 @@ public class EmployeeService {
                 new Address(form.getStreet(), form.getCity(), form.getCountry()),
                 form.getRole(), form.getJobPosition());
         employeeRepository.save(employee);
+    }
+
+    @Transactional
+    public List<Employee> getAll() {
+        final List<Employee> employees = employeeRepository.findAll();
+        employees.forEach(this::computeAddress);
+        return employees;
     }
 }
